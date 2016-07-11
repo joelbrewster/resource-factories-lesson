@@ -2,17 +2,19 @@ angular
   .module("lightsaberApp")
   .controller("MainController", MainController);
 
-MainController.$inject = ['$resource']
-function MainController($resource){
+MainController.$inject = ['$resource', 'Character', 'Episode'];
+function MainController($resource, Character, Episodes){
   var self = this;
+  console.log(Episodes);
 
   // Blank new character for form
-  this.character = {}
+  this.character = {};
 
   // Obtain our resource class
-  var Character = $resource('http://localhost:3000/characters/:id', {id: '@_id'}, {
-    'update': { method:'PUT' }
-  });
+  // Copied into the front-end/js/resources/character.js
+  // var Character = $resource('http://localhost:3000/characters/:id', {id: '@_id'}, {
+  //   'update': { method:'PUT' }
+  // });
 
   // Fetch all todos
   this.characters = Character.query();
@@ -40,7 +42,7 @@ function MainController($resource){
     } else {
       Character.save(self.character, function(character) {
         self.characters.push(character);
-        self.character = {}
+        self.character = {};
       });
     }
   };
@@ -50,10 +52,10 @@ function MainController($resource){
     Character.delete({id: character._id});
     var index = self.characters.indexOf(character);
     self.characters.splice(index, 1);
-  }
+  };
 
   // Fill the form to edit a Character
   this.editCharacter = function(character){
     self.character = character;
-  }
+  };
 }
